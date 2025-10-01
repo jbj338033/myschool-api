@@ -1,0 +1,135 @@
+basePath: /api/v1
+definitions:
+  main.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  main.Meal:
+    additionalProperties:
+      $ref: '#/definitions/main.MealData'
+    type: object
+  main.MealData:
+    properties:
+      calories:
+        type: number
+      menu:
+        items:
+          type: string
+        type: array
+    type: object
+  main.School:
+    properties:
+      address:
+        type: string
+      code:
+        type: string
+      name:
+        type: string
+      org_code:
+        type: string
+      type:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Simple and clean school meal/timetable API server
+  title: MySchool API
+  version: "1.0"
+paths:
+  /meals:
+    get:
+      description: Get meal information for a specific school and date
+      parameters:
+      - description: Education office code
+        in: query
+        name: org_code
+        required: true
+        type: string
+      - description: School code
+        in: query
+        name: school_code
+        required: true
+        type: string
+      - description: Date (YYYYMMDD format)
+        in: query
+        name: date
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.Meal'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      summary: Get school meals
+      tags:
+      - Meals
+  /schools:
+    get:
+      description: Get all schools
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/main.School'
+            type: array
+      summary: Get all schools
+      tags:
+      - Schools
+  /timetables:
+    get:
+      description: Get timetable for a specific school, grade, and class
+      parameters:
+      - description: Education office code
+        in: query
+        name: org_code
+        required: true
+        type: string
+      - description: School code
+        in: query
+        name: school_code
+        required: true
+        type: string
+      - description: Grade
+        in: query
+        name: grade
+        required: true
+        type: string
+      - description: Class
+        in: query
+        name: class
+        required: true
+        type: string
+      - description: Date (YYYYMMDD format)
+        in: query
+        name: date
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: string
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      summary: Get school timetables
+      tags:
+      - Timetables
+schemes:
+- http
+- https
+swagger: "2.0"
